@@ -22,7 +22,7 @@ public class test {
             motor = hardwareMap.dcMotor.get("Motor3");
 
             waitForStart();
-
+//HELLO MELA!!!!
             if (opModeIsActive()){
                 motor.setPower(-0.36);
             }
