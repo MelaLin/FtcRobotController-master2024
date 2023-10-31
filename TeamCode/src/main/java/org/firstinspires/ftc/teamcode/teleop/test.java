@@ -25,6 +25,10 @@ public class test {
 //HELLO MELA!!!!
             if (opModeIsActive()){
                 motor.setPower(-0.36);
+                sleep(1000);
+
+                motor.setPower(0);
+                sleep(1000);
             }
         }
     }
