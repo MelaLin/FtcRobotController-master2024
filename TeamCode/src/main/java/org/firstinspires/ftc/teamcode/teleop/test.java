@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+//import org.firstinspires.ftc.robotcontroller.*;
+//import org.firstinspires.ftc.teamcode.*;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -12,18 +16,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name = "test", group = "Default")
 
-public class test {
-
     public class test extends LinearOpMode {
-        private DcMotor motor;
 
-        @Override
-        public void runOpMode(){
-            motor = hardwareMap.dcMotor.get("Motor3");
+    @Override
+        public void runOpMode() {
+        DcMotor motor = hardwareMap.dcMotor.get("Motor3");
 
             waitForStart();
 //HELLO MELA!!!!
-            if (opModeIsActive()){
+            if (opModeIsActive()) {
                 motor.setPower(-0.36);
                 sleep(1000);
 
@@ -32,6 +33,6 @@ public class test {
             }
         }
     }
-}
 
-}
+
+
