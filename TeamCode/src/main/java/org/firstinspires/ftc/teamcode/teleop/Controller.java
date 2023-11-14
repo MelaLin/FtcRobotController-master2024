@@ -23,6 +23,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
             if (opModeIsActive()) {
 
+                motor.setPower(0.7);
+                sleep (1000);
+
+                motor.setPower (0);
+                sleep(500);
+
             }
         }
 }
