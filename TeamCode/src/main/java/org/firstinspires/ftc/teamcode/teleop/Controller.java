@@ -27,20 +27,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             if (opModeIsActive()) {
 
                 backLeft.setPower(0.7);
-                sleep (1000);
                 frontLeft.setPower(0.7);
-                sleep (1000);
                 backRight.setPower(0.7);
-                sleep (1000);
                 frontRight.setPower(0.7);
                 sleep (1000);
 
                 backLeft.setPower (0);
-                sleep(500);
                 frontLeft.setPower (0);
-                sleep(500);
                 backRight.setPower (0);
-                sleep(500);
                 frontRight.setPower (0);
                 sleep(500);
 
