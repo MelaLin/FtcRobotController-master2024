@@ -17,16 +17,31 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
         @Override
         public void runOpMode() {
-            DcMotor motor = hardwareMap.dcMotor.get("Motor3");
+            DcMotor backLeft = hardwareMap.dcMotor.get("Motor0");
+            DcMotor frontLeft = hardwareMap.dcMotor.get("Motor1");
+            DcMotor backRight = hardwareMap.dcMotor.get("Motor2");
+            DcMotor frontRight = hardwareMap.dcMotor.get("Motor3");
 
             waitForStart();
 
             if (opModeIsActive()) {
 
-                motor.setPower(0.7);
+                backLeft.setPower(0.7);
+                sleep (1000);
+                frontLeft.setPower(0.7);
+                sleep (1000);
+                backRight.setPower(0.7);
+                sleep (1000);
+                frontRight.setPower(0.7);
                 sleep (1000);
 
-                motor.setPower (0);
+                backLeft.setPower (0);
+                sleep(500);
+                frontLeft.setPower (0);
+                sleep(500);
+                backRight.setPower (0);
+                sleep(500);
+                frontRight.setPower (0);
                 sleep(500);
 
             }
