@@ -13,6 +13,24 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name = "Controllerv2", group = "Default")
 
-public class Controllerv2 {
+public class Controllerv2 extends LinearOpMode{
+
+    @Override
+    public void runOpMode() {
+        DcMotor backLeft = hardwareMap.dcMotor.get("Motor0");
+        DcMotor frontLeft = hardwareMap.dcMotor.get("Motor1");
+        DcMotor backRight = hardwareMap.dcMotor.get("Motor2");
+        DcMotor frontRight = hardwareMap.dcMotor.get("Motor3");
+
+        waitForStart();
+
+        if(opModeIsActive()){
+
+            telemetry.update();
+
+
+
+        }
+    }
 
 }
