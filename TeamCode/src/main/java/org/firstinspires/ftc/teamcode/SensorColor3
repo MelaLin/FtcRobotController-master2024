@@ -1,0 +1,286 @@
+package org.firstinspires.ftc.teamcode23;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
+import com.qualcomm.ftccommon.SoundPlayer;
+
+@TeleOp
+
+public class WheelsTeleOpV8 extends LinearOpMode {
+    //Declare variables
+    private DcMotorEx frontLeft;
+    private DcMotorEx frontRight;
+    private DcMotorEx backLeft;
+    private DcMotorEx backRight;
+    private Servo leftGrab;
+    private Servo rightGrab;
+    private DcMotorEx slidesMotor;
+    private AndroidSoundPool androidSoundPool;
+
+    
+    private Double speedLeft = 0.0;
+    private Double speedRight = 0.0;
+    private Double frontLeftVelocity = 0.0;
+    private Double frontRightVelocity = 0.0;
+    private Double backLeftVelocity = 0.0;
+    private Double backRightVelocity = 0.0;
+    private Integer slideStartPosition = 0;
+    private Integer targetPosition = 0;
+    
+    private ElapsedTime runtime = new ElapsedTime();
+    
+    
+    @Override
+    public void runOpMode() {
+        //Define motors
+        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        leftGrab = hardwareMap.get(Servo.class, "leftGrab");
+        rightGrab = hardwareMap.get(Servo.class, "rightGrab");
+        slidesMotor = hardwareMap.get(DcMotorEx.class, "slidesMotor");
+        androidSoundPool = new AndroidSoundPool();
+        
+        //Reverse direction so positive power moves robot forward
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        
+        
+        //set starting slide position and initialize motors
+        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slidesMotor.setPower(0.0);
+        
+        slideStartPosition = slidesMotor.getCurrentPosition();
+        telemetry.addData("Slide encoders reset and starting at: ", slidesMotor.getCurrentPosition());
+        targetPosition = slideStartPosition;
+        
+        //direction for the left and right grab servos
+        leftGrab.setDirection(Servo.Direction.REVERSE);
+        rightGrab.setDirection(Servo.Direction.REVERSE);
+        
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        
+        
+       /*call androidSoundPool.initialize(SoundPlayer.getInstance());
+    while (!androidSoundPool.preloadSound("Among Us Role Reveal.mp3")) {
+      telemetry.addData("Do not press Start", "loading sound file"); */
+        
+    
+    
+        
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+            
+      
+            
+            telemetry.addData("Status", "Running");
+            telemetry.addData("gamepad1.right_stick_y: ", gamepad1.right_stick_y);
+            telemetry.addData("gamepad1.right_stick_x: ", gamepad1.right_stick_x);
+            telemetry.addData("gamepad1.left_stick_y: ", gamepad1.left_stick_y);
+            telemetry.addData("gamepad1.left_stick_x: ", gamepad1.left_stick_x);
+            telemetry.addData("speedLeft: ", speedLeft);
+            telemetry.addData("speedRight: ", speedRight);
+            telemetry.addData("Motor Left Front Speed: ", frontLeft.getVelocity());
+            telemetry.addData("Motor Right Front Speed: ", frontRight.getVelocity());
+            telemetry.addData("Motor Left Back Speed: ", backLeft.getVelocity());
+            telemetry.addData("Motor Right Back Speed: ", backRight.getVelocity());
+            telemetry.addData("Grab Right Position: ", gamepad1.right_bumper);
+            telemetry.addData("Grab Left Position: ", gamepad1.left_bumper);
+            telemetry.addData("Slides Motor: ", gamepad1.x);
+            telemetry.addData("Slide Start Position: ", slideStartPosition);
+            telemetry.addData("Current Position: ", slidesMotor.getCurrentPosition());
+            telemetry.addData("Target Position: ", targetPosition);
+            //telemetry.addData("Press START to begin", "go");
+         
+            //telemetry.addData("gamepad1.left_bumper: ", gamepad1.left_bumper);
+            telemetry.update();
+            
+            //Enable motors
+            frontLeft.setMotorEnable();
+            frontRight.setMotorEnable();
+            backLeft.setMotorEnable();
+            backRight.setMotorEnable();
+            slidesMotor.setMotorEnable();
+            
+            //Reset variables
+            speedLeft = 0.0;
+            speedRight = 0.0;
+            frontLeftVelocity = 0.0;
+            frontRightVelocity = 0.0;
+            backLeftVelocity = 0.0;
+            backRightVelocity = 0.0;
+            
+            //Run main logic
+            setSpeed();
+            setRotation();
+            setDirection();
+            setMotorVelocity();
+            Claw();
+            Slides();
+            
+            //Add timer method for arm...
+            
+        }
+    }
+    
+ 
+    public void Claw() {
+    rightGrab.setDirection(Servo.Direction.REVERSE);
+    leftGrab.setDirection(Servo.Direction.REVERSE);
+    if (gamepad2.right_trigger > 0.7) { //close
+      leftGrab.setPosition(0.99);
+      rightGrab.setPosition(0);
+     }  else if (gamepad2.left_trigger > 0.7) { //open
+         rightGrab.setPosition(0.3);
+         leftGrab.setPosition(0.7);
+     } 
+    }
+     
+    //using a position based system for the slides we can prevent them moving too far down
+    //and you can prevent the slides from sliding downwards
+    private void Slides() {
+        if (gamepad2.dpad_up) {
+            targetPosition = slidesMotor.getCurrentPosition() + 100;
+            runtime.reset(); //timer is reset when user imput is given
+        } else if (gamepad2.dpad_down) {
+            targetPosition = slidesMotor.getCurrentPosition() - 100;
+            runtime.reset();
+        }
+        
+        //after 200 milliseconds without user input set current position as target
+        //this prevents motor from moving further than possible and prevents overheating
+        if ((runtime.milliseconds() > 200) && (runtime.milliseconds() < 300)) {
+            targetPosition = slidesMotor.getCurrentPosition();
+        }
+        
+        //Allow changing starting position by holding down x
+        if ((targetPosition < slideStartPosition) && (!gamepad2.x)) {
+            targetPosition = slideStartPosition;
+        }
+        if (gamepad2.x) {
+            slideStartPosition = slidesMotor.getCurrentPosition();
+        }
+        
+        
+        slidesMotor.setTargetPosition(targetPosition);
+        slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slidesMotor.setTargetPositionTolerance(10); //default tollerance is 5
+        
+        if (gamepad2.right_bumper) {
+        slidesMotor.setPower(0.6);
+        } else if (gamepad2.left_bumper) {
+            slidesMotor.setPower(0.2);
+            } else {
+            slidesMotor.setPower(0.4);
+            
+        }
+    } 
+  
+    public void setSpeed() {
+        Double offsetLeft = 1.08; 
+        Double offsetRight = 0.92;
+        if ((gamepad1.right_trigger > 0.7) && (gamepad1.left_trigger > 0.7)) { //normal
+            speedLeft = 1250.0 * offsetLeft;
+            speedRight = 1250.0 * offsetRight;
+        } else if (gamepad1.right_trigger > 0.7) { //fast
+            speedLeft = 2000.0 * offsetLeft;
+            speedRight = 2000.0 * offsetRight;
+        } else if (gamepad1.left_trigger > 0.7) { //slow
+            speedLeft = 650.0 * offsetLeft;
+            speedRight = 650.0 * offsetRight;
+        } else { //normal
+            speedLeft = 1250.0 * offsetLeft;
+            speedRight = 1250.0 * offsetRight;
+        }
+    }
+    
+    public void setRotation() {
+        if (gamepad1.left_stick_x < -0.5) { //rotate left
+                frontLeftVelocity -= speedLeft / 2;
+                frontRightVelocity += speedRight / 2;
+                backLeftVelocity -= speedLeft / 2;
+                backRightVelocity += speedRight / 2;
+            } else if (gamepad1.left_stick_x > 0.5) { //rotate right
+                frontLeftVelocity += speedLeft / 2;
+                frontRightVelocity -= speedRight / 2;
+                backLeftVelocity += speedLeft / 2;
+                backRightVelocity -= speedRight / 2;
+            }
+    }
+    
+    
+    public void setDirection() {
+        if (gamepad1.right_stick_y <= -0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)) { //forward
+                frontLeftVelocity += speedLeft;
+                frontRightVelocity += speedRight;
+                backLeftVelocity += speedLeft;
+                backRightVelocity += speedRight;
+        } else if (gamepad1.right_stick_y >= 0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)) { //back
+                frontLeftVelocity -= speedLeft;
+                frontRightVelocity -= speedRight;
+                backLeftVelocity -= speedLeft;
+                backRightVelocity -= speedRight;
+        } else if (gamepad1.right_stick_x <= -0.99 && (Math.abs(gamepad1.right_stick_y) < 0.3)) { //left
+                frontLeftVelocity -= speedLeft;
+                frontRightVelocity += speedRight;
+                backLeftVelocity += speedLeft;
+                backRightVelocity -= speedRight;
+        } else if (gamepad1.right_stick_x >= 0.99 && (Math.abs(gamepad1.right_stick_y) < 0.3)) { //right
+                frontLeftVelocity += speedLeft;
+                frontRightVelocity -= speedRight;
+                backLeftVelocity -= speedLeft;
+                backRightVelocity += speedRight;
+        } else if ((gamepad1.right_stick_y < -0.3) && (gamepad1.right_stick_x < -0.3)) { //forward left
+                frontLeftVelocity += 0;
+                frontRightVelocity += speedRight;
+                backLeftVelocity += speedLeft;
+                backRightVelocity += 0;
+        } else if ((gamepad1.right_stick_y < -0.3) && (gamepad1.right_stick_x > 0.3)) { //forward right
+                frontLeftVelocity += speedLeft;
+                frontRightVelocity += 0;
+                backLeftVelocity += 0;
+                backRightVelocity += speedRight;
+        } else if ((gamepad1.right_stick_y > 0.3) && (gamepad1.right_stick_x < -0.3)) { //back left
+                frontLeftVelocity -= speedLeft;
+                frontRightVelocity += 0;
+                backLeftVelocity += 0;
+                backRightVelocity -= speedRight;
+        } else if ((gamepad1.right_stick_y > 0.3) && (gamepad1.right_stick_x > 0.3)) { //back right
+                frontLeftVelocity += 0;
+                frontRightVelocity -= speedRight;
+                backLeftVelocity -= speedLeft;
+                backRightVelocity += 0;
+        } else { //no direction
+                frontLeftVelocity = frontLeftVelocity * 2; //multiply velocity by 2 to speed up stationary rotation
+                frontRightVelocity = frontRightVelocity * 2;
+                backLeftVelocity = backLeftVelocity * 2;
+                backRightVelocity = backRightVelocity * 2;
+        }
+    }
+    
+    
+    
+    public void setMotorVelocity() {
+        frontLeft.setVelocity(frontLeftVelocity); //needs to turn twice as fast due to 14 to 28 gear ratio
+        frontRight.setVelocity(frontRightVelocity * 0.6);
+        backLeft.setVelocity(backLeftVelocity * 0.6);
+        backRight.setVelocity(backRightVelocity); //needs to turn twice as fast due to 14 to 28 gear ratio
+    
+        //androidSoundPool.close();
+    }
+}
+
