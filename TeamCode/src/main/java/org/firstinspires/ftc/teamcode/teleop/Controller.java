@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name = "Controller", group = "Default")
@@ -25,13 +20,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private Double frontRightVelocity = 0.0;
     private Double backLeftVelocity = 0.0;
     private Double backRightVelocity = 0.0;
+    /*
+    public Controller(DcMotorEx frontLeft) {
+        this.frontLeft = frontLeft;
+    } */
 
-        @Override
+    @Override
         public void runOpMode() {
-            DcMotor backLeft = hardwareMap.dcMotor.get("Motor0");
-            DcMotor frontLeft = hardwareMap.dcMotor.get("Motor1");
-            DcMotor backRight = hardwareMap.dcMotor.get("Motor2");
-            DcMotor frontRight = hardwareMap.dcMotor.get("Motor3");
+            backLeft = hardwareMap.get(DcMotorEx.class, "Motor0");
+            frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
+            backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
+            frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
 
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -50,16 +49,16 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 telemetry.addData("gamepad1.left_stick_x: ", gamepad1.left_stick_x);
                 telemetry.addData("speedLeft: ", speedLeft);
                 telemetry.addData("speedRight: ", speedRight);
-                /*telemetry.addData("Motor Left Front Speed: ", frontLeft.getVelocity());
+                telemetry.addData("Motor Left Front Speed: ", frontLeft.getVelocity());
                 telemetry.addData("Motor Right Front Speed: ", frontRight.getVelocity());
                 telemetry.addData("Motor Left Back Speed: ", backLeft.getVelocity());
-                telemetry.addData("Motor Right Back Speed: ", backRight.getVelocity());*/
+                telemetry.addData("Motor Right Back Speed: ", backRight.getVelocity());
                 telemetry.update();
 
-                /*frontLeft.setMotorEnable();
+                frontLeft.setMotorEnable();
                 frontRight.setMotorEnable();
                 backLeft.setMotorEnable();
-                backRight.setMotorEnable();*/
+                backRight.setMotorEnable();
 
                 speedLeft = 0.0;
                 speedRight = 0.0;
@@ -72,7 +71,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 setRotation();
                 setDirection();
 
-
+                frontLeft.setVelocity(frontLeftVelocity);
+                frontRight.setVelocity(frontRightVelocity);
+                backLeft.setVelocity(backLeftVelocity);
+                backRight.setVelocity(backRightVelocity);
 
             }
         }
