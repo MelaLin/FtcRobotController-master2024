@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -74,6 +75,9 @@ public class AutonomousColor {
 
             // get a reference to the distance sensor that shares the same name.
             sensorDistance = hardwareMap.get(DistanceSensor.class, "color");
+
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
             // hsvValues is an array that will hold the hue, saturation, and value information.
             float hsvValues[] = {0F, 0F, 0F};
