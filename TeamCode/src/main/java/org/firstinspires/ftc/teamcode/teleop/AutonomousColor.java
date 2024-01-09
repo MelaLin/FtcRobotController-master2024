@@ -118,9 +118,9 @@ import java.util.Locale;
                 if (redValue >= 5) {
                     telemetry.addData("Update ", "Red Over 5");
                     backLeft.setPower(0.2);
-                    backRight.setPower(-0.2);
+                    backRight.setPower(0.2);
                     frontLeft.setPower(0.2);
-                    frontRight.setPower(-0.2);
+                    frontRight.setPower(0.2);
                 }
                 // blue
                 else if (redValue == 2) {
