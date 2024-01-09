@@ -154,7 +154,7 @@ public class AutonomousColor {
                     }
                 });
 
-
+//me when I see color 0-0
             }
 
             // Set the panel back to the default color
