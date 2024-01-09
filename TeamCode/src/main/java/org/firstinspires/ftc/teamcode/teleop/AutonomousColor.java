@@ -100,7 +100,6 @@ import java.util.Locale;
                         (int) (sensorColor.green() * SCALE_FACTOR),
                         (int) (sensorColor.blue() * SCALE_FACTOR),
                         hsvValues);
-
                 // send the info back to driver station using telemetry function.
                 telemetry.addData("Distance (cm)",
                         String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
@@ -113,6 +112,7 @@ import java.util.Locale;
                 //set hueValue to the hue sensor value on sensor
                 double hueValue = hsvValues[0];
                 // red value
+                //set Power to 0.2 times the motor ratio value (taken from Controller class)
                 if (((0 <= hueValue) && (hueValue >= 30))||((315 <= hueValue) && (hueValue >= 360))) {
                     backLeft.setPower(0.2*1.08);
                     backRight.setPower(0.2*0.92);
