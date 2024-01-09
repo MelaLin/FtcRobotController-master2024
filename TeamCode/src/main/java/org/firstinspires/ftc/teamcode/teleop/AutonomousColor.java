@@ -105,29 +105,26 @@ import java.util.Locale;
                 telemetry.addData("Distance (cm)",
                         String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
                 telemetry.addData("Alpha", sensorColor.alpha());
-
-                redValue = sensorColor.red();
-                telemetry.addData("Red  ", redValue);
-
+                telemetry.addData("Red  ", sensorColor.red());
                 telemetry.addData("Green", sensorColor.green());
                 telemetry.addData("Blue ", sensorColor.blue());
                 telemetry.addData("Hue", hsvValues[0]);
-                // red value
                 telemetry.update();
-
-                if (redValue >= 5) {
-                    telemetry.addData("Update ", "Red Over 5");
-                    backLeft.setPower(0.2);
-                    backRight.setPower(0.2);
-                    frontLeft.setPower(0.2);
-                    frontRight.setPower(0.2);
+                //set hueValue to the hue sensor value on sensor
+                double hueValue = hsvValues[0];
+                // red value
+                if (((0 <= hueValue) && (hueValue >= 30))||((315 <= hueValue) && (hueValue >= 360))) {
+                    backLeft.setPower(0.2*1.08);
+                    backRight.setPower(0.2*0.92);
+                    frontLeft.setPower(0.2*1.08);
+                    frontRight.setPower(0.2*0.92);
                 }
                 // blue
-                else if (redValue == 2) {
-                    backLeft.setPower(-0.2);
-                    backRight.setPower(0.2);
-                    frontLeft.setPower(-0.2);
-                    frontRight.setPower(0.2);
+                else if ((160 <= hueValue) && (hueValue >= 280)) {
+                    backLeft.setPower(-0.2*1.08);
+                    backRight.setPower(-0.2*0.92);
+                    frontLeft.setPower(-0.2*1.08);
+                    frontRight.setPower(-0.2*0.92);
                 }
                 // gray
 /***            else if (redValue ==3) {
