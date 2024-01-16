@@ -14,9 +14,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 
 import java.util.Locale;
-    @TeleOp
+    @TeleOp(name = "AutonomousColor", group = "Default")
 // Comment this out to add to the opmode list
     public class AutonomousColor extends LinearOpMode {
 
@@ -54,10 +55,10 @@ import java.util.Locale;
         public void runOpMode() {
 
             // get a reference to the color sensor.
-            backLeft = hardwareMap.get(DcMotorEx.class, "Motor0");
-            backRight = hardwareMap.get(DcMotorEx.class, "Motor3");
-            frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
-            frontRight = hardwareMap.get(DcMotorEx.class, "Motor2");
+            DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "Motor0");
+            DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
+            DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
+            DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
 
             sensorColor = hardwareMap.get(ColorSensor.class, "color");
 
@@ -85,11 +86,6 @@ import java.util.Locale;
             // wait for the start button to be pressed.
             waitForStart();
 
-            backLeft.setPower(-0.2);
-            backRight.setPower(0.2);
-            frontLeft.setPower(-0.2);
-            frontRight.setPower(0.2);
-
             // loop and read the RGB and distance data.
             // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
             while (opModeIsActive()) {
@@ -111,39 +107,116 @@ import java.util.Locale;
                 telemetry.update();
                 //set hueValue to the hue sensor value on sensor
                 double hueValue = hsvValues[0];
+                double distance = sensorDistance.getDistance(DistanceUnit.CM);
+
+                //move forward
+                backLeft.setPower(0.1 * 1.08);
+                backRight.setPower(0.1 * 0.92);
+                frontLeft.setPower(0.1 * 1.08);
+                frontRight.setPower(0.1 * 0.92);
+                sleep(1000);
+
+                //rotate on the spot 90 degrees
+                backLeft.setPower(-0.1 * 1.08);
+                backRight.setPower(0.1 * 0.92);
+                frontLeft.setPower(-0.1 * 1.08);
+                frontRight.setPower(0.1 * 0.92);
+                sleep(500);
+
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                sleep(1000);
+
+                if (distance <= 7) {
+                    //progarm this to drop the purple tile on the tape
+                    //program this to move to the leftmost side of the backdrop where you put the tiles
+                }
+
+                else{
+                    backLeft.setPower(0.1 * 1.08);
+                    backRight.setPower(-0.1 * 0.92);
+                    frontLeft.setPower(0.1 * 1.08);
+                    frontRight.setPower(-0.1 * 0.92);
+                    sleep(500);
+
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                    sleep(500);
+
+                    if (distance <= 7) {
+
+                        //program this to drop the purple tile on the tape
+                        //program this to move to the middle of the backdrop where you put the tiles
+                    }
+
+                    else {
+                        backLeft.setPower(0.1 * 1.08);
+                        backRight.setPower(-0.1 * 0.92);
+                        frontLeft.setPower(0.1 * 1.08);
+                        frontRight.setPower(-0.1 * 0.92);
+                        sleep(500);
+
+                        backLeft.setPower(0);
+                        backRight.setPower(0);
+                        frontLeft.setPower(0);
+                        frontRight.setPower(0);
+                        sleep(500);
+
+                        //program to drop the purple tile on the tape
+
+                        //program this to move to the rightmost part of the backdrop where you put the tiles
+                    }
+
+                }
+
+
                 // red value
                 //set Power to 0.2 times the motor ratio value (taken from Controller class)
-                if (((0 <= hueValue) && (hueValue >= 30))||((315 <= hueValue) && (hueValue >= 360))) {
-                    backLeft.setPower(0.2*1.08);
-                    backRight.setPower(0.2*0.92);
-                    frontLeft.setPower(0.2*1.08);
-                    frontRight.setPower(0.2*0.92);
+                /* if (((60 <= hueValue) && (hueValue <= 70))) {
+                    backLeft.setPower(0.2 * 1.08);
+                    backRight.setPower(0.2 * 0.92);
+                    frontLeft.setPower(0.2 * 1.08);
+                    frontRight.setPower(0.2 * 0.92);
                 }
                 // blue
-                else if ((160 <= hueValue) && (hueValue >= 280)) {
-                    backLeft.setPower(-0.2*1.08);
-                    backRight.setPower(-0.2*0.92);
-                    frontLeft.setPower(-0.2*1.08);
-                    frontRight.setPower(-0.2*0.92);
-                }
+                else if ((71 <= hueValue) && (hueValue <= 80)) {
+                    backLeft.setPower(-0.2 * 1.080);
+                    backRight.setPower(-0.2 * 0.92);
+                    frontLeft.setPower(-0.2 * 1.08);
+                    frontRight.setPower(-0.2 * 0.92);
+
+
+                } else {
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                } */
                 // gray
-/***            else if (redValue ==3) {
- backLeft.setPower(0.23);
- backRight.setPower(-0.22);
- frontLeft.setPower(0.2);
- frontRight.setPower(-0.2);
- }***/
+
+                // while ((179 >= hueValue) && (hueValue >= 31)||((315 >= hueValue) && (hueValue >= 281)){
+                //backLeft.setPower(0);
+                //backRight.setPower(0);
+                //frontLeft.setPower(0);
+                //frontRight.setPower(0);
+                //}
+
 
                 // change the background color to match the color detected by the RGB sensor.
                 // pass a reference to the hue, saturation, and value array as an argument
                 // to the HSVToColor method.
+
+                /*
                 relativeLayout.post(new Runnable() {
                     public void run() {
                         relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
                     }
                 });
 
-//me when I see color 0-0
             }
 
             // Set the panel back to the default color
@@ -152,8 +225,8 @@ import java.util.Locale;
                     relativeLayout.setBackgroundColor(Color.WHITE);
                 }
             });
-
+*/
+            }
         }
 
     }
-    // }

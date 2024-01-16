@@ -31,10 +31,10 @@ public class Controllerv2 extends LinearOpMode{
 
         if(opModeIsActive()){
 
-            frontRight.setPower(1);
-            frontLeft.setPower(-1);
-            backRight.setPower(1);
-            backLeft.setPower(-1);
+            frontRight.setPower(0.5);
+            frontLeft.setPower(-0.5);
+            backRight.setPower(0.5);
+            backLeft.setPower(-0.5);
             sleep(500);
 
             frontRight.setPower(0);
