@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import android.app.Activity;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -14,17 +12,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 
 import java.util.Locale;
     @TeleOp(name = "AutonomousColor", group = "Default")
 // Comment this out to add to the opmode list
     public class AutonomousColor extends LinearOpMode {
 
-        private DcMotorEx backLeft;
-        private DcMotorEx backRight;
-        private DcMotorEx frontLeft;
-        private DcMotorEx frontRight;
 
         /**
          * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
@@ -46,10 +39,6 @@ import java.util.Locale;
         ColorSensor sensorColor;
         DistanceSensor sensorDistance;
 
-        int redValue = 0;
-
-
-
 
         @Override
         public void runOpMode() {
@@ -59,6 +48,7 @@ import java.util.Locale;
             DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
             DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
             DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
+            DcMotorEx armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
 
             sensorColor = hardwareMap.get(ColorSensor.class, "color");
 
@@ -88,7 +78,7 @@ import java.util.Locale;
 
             // loop and read the RGB and distance data.
             // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-            while (opModeIsActive()) {
+            if (opModeIsActive()) {
                 // convert the RGB values to HSV values.
                 // multiply by the SCALE_FACTOR.
                 // then cast it back to int (SCALE_FACTOR is a double)
@@ -110,18 +100,11 @@ import java.util.Locale;
                 double distance = sensorDistance.getDistance(DistanceUnit.CM);
 
                 //move forward
-                backLeft.setPower(0.1 * 1.08);
-                backRight.setPower(0.1 * 0.92);
-                frontLeft.setPower(0.1 * 1.08);
-                frontRight.setPower(0.1 * 0.92);
+                backLeft.setPower(0.5 * 0.96);
+                backRight.setPower(0.5 * 1.07);
+                frontLeft.setPower(0.5 * 0.96);
+                frontRight.setPower(0.5 * 1.07);
                 sleep(1000);
-
-                //rotate on the spot 90 degrees
-                backLeft.setPower(-0.1 * 1.08);
-                backRight.setPower(0.1 * 0.92);
-                frontLeft.setPower(-0.1 * 1.08);
-                frontRight.setPower(0.1 * 0.92);
-                sleep(500);
 
                 backLeft.setPower(0);
                 backRight.setPower(0);
@@ -129,9 +112,61 @@ import java.util.Locale;
                 frontRight.setPower(0);
                 sleep(1000);
 
+                backLeft.setPower(-0.5 * 0.96);
+                backRight.setPower(-0.5 * 1.07);
+                frontLeft.setPower(-0.5 * 0.96);
+                frontRight.setPower(-0.5 * 1.07);
+                sleep(700);
+
+                //rotate on the spot 90 degrees
+                backLeft.setPower(-0.3 * 0.92);
+                backRight.setPower(0.3 * 1.08);
+                frontLeft.setPower(-0.3 * 0.92);
+                frontRight.setPower(0.3 * 1.08);
+                sleep(760);
+
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                sleep(1000);
+
+                backLeft.setPower(-0.2 * 0.96);
+                backRight.setPower(-0.2 * 1.07);
+                frontLeft.setPower(-0.2 * 0.96);
+                frontRight.setPower(-0.2 * 1.07);
+                sleep(300);
+
+                backLeft.setPower(0.5 * 0.92);
+                backRight.setPower(0.5 * 0.92);
+                frontLeft.setPower(-0.5 * 1.08);
+                frontRight.setPower(-0.5 * 0.92);
+                sleep(1000);
+
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                sleep(1000);
+/*
                 if (distance <= 7) {
-                    //progarm this to drop the purple tile on the tape
+                    //program this to drop the purple tile on the tape
                     //program this to move to the leftmost side of the backdrop where you put the tiles
+
+
+
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                    sleep(1000);
+
+                    backLeft.setPower(-0.1 * 1.08);
+                    backRight.setPower(0.1 * 0.92);
+                    frontLeft.setPower(-0.1 * 1.08);
+                    frontRight.setPower(0.1 * 0.92);
+                    sleep(500);
+
                 }
 
                 else{
@@ -173,7 +208,7 @@ import java.util.Locale;
 
                 }
 
-
+*/
                 // red value
                 //set Power to 0.2 times the motor ratio value (taken from Controller class)
                 /* if (((60 <= hueValue) && (hueValue <= 70))) {

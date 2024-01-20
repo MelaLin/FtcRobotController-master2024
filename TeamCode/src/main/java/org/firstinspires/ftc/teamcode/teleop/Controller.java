@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private DcMotorEx frontRight;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
+    private DcMotorEx armMotor;
 
     private Double speedLeft = 0.0;
     private Double speedRight = 0.0;
@@ -20,6 +21,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private Double frontRightVelocity = 0.0;
     private Double backLeftVelocity = 0.0;
     private Double backRightVelocity = 0.0;
+    private Double armMotorVelocity = 0.0;
     /*
     public Controller(DcMotorEx frontLeft) {
         this.frontLeft = frontLeft;
@@ -31,6 +33,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
             backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
             frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
+            armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
 
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -59,6 +62,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 frontRight.setMotorEnable();
                 backLeft.setMotorEnable();
                 backRight.setMotorEnable();
+                armMotor.setMotorEnable();
 
                 speedLeft = 0.0;
                 speedRight = 0.0;
@@ -66,10 +70,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 frontRightVelocity = 0.0;
                 backLeftVelocity = 0.0;
                 backRightVelocity = 0.0;
+                armMotorVelocity = 0.0;
+
 
                 setSpeed();
                 setRotation();
                 setDirection();
+                setArm();
+
 
                 frontLeft.setVelocity(frontLeftVelocity);
                 frontRight.setVelocity(frontRightVelocity);
@@ -78,6 +86,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
             }
         }
+
+
+        public void setArm() {
+        if (gamepad2.right_stick_y <= -0.99 && (Math.abs(gamepad2.right_stick_x) < 0.3)){
+            armMotorVelocity += 1250;
+        }
+        else if (gamepad1.right_stick_y >= 0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)){
+            armMotorVelocity -= 1250;
+            }
+        }
+
     public void setSpeed() {
         Double offsetLeft = 1.08;
         Double offsetRight = 0.92;
@@ -123,14 +142,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             backRightVelocity -= speedRight;
         } else if (gamepad1.right_stick_x <= -0.99 && (Math.abs(gamepad1.right_stick_y) < 0.3)) { //left
             frontLeftVelocity -= speedLeft;
-            frontRightVelocity += speedRight;
+            frontRightVelocity -= speedRight;
             backLeftVelocity += speedLeft;
-            backRightVelocity -= speedRight;
+            backRightVelocity += speedRight;
         } else if (gamepad1.right_stick_x >= 0.99 && (Math.abs(gamepad1.right_stick_y) < 0.3)) { //right
             frontLeftVelocity += speedLeft;
-            frontRightVelocity -= speedRight;
+            frontRightVelocity += speedRight;
             backLeftVelocity -= speedLeft;
-            backRightVelocity += speedRight;
+            backRightVelocity -= speedRight;
         } else if ((gamepad1.right_stick_y < -0.3) && (gamepad1.right_stick_x < -0.3)) { //forward left
             frontLeftVelocity += 0;
             frontRightVelocity += speedRight;
