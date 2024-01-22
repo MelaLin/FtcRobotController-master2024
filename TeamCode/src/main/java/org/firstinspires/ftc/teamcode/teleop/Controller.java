@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp(name = "Controller", group = "Default")
 
@@ -14,6 +17,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
     private DcMotorEx armMotor;
+
+    private CRServo leftWheel;
+    private CRServo rightWheel;
 
     private Double speedLeft = 0.0;
     private Double speedRight = 0.0;
@@ -34,6 +40,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
             frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
             armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
+            CRServo leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
+            CRServo rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+            CRServo rotation = hardwareMap.get(CRServo.class, "rotation");
 
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -77,6 +86,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 setRotation();
                 setDirection();
                 setArm();
+                setLaunch();
 
 
                 frontLeft.setVelocity(frontLeftVelocity);
@@ -87,6 +97,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             }
         }
 
+        public void setLaunch(){
+        if (gamepad2.a) {
+            leftWheel.setPower(0);
+            rightWheel.setPower(0);
+        }
+            else {
+
+            }
+        }
 
         public void setArm() {
         if (gamepad2.right_stick_y <= -0.99 && (Math.abs(gamepad2.right_stick_x) < 0.3)){
