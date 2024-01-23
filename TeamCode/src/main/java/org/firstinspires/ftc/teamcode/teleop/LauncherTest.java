@@ -24,11 +24,9 @@ public class LauncherTest extends LinearOpMode {
         CRServo rotation = hardwareMap.get(CRServo.class, "rotation");
 
         waitForStart();
-
         while (opModeIsActive()){
-
-           // rightWheel.setPower(1);
-           leftWheel.setPower(1);
+           rightWheel.setPower(0.5);
+           leftWheel.setPower(0.5);
 
         }
     }

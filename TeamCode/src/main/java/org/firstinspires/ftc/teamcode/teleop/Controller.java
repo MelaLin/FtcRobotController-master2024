@@ -101,24 +101,24 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
         public void setLaunch(){
 
-        if (gamepad2.right_trigger == 1) {
-            leftWheel.setPower(1);
-            rightWheel.setPower(1);
-        }
-        else if (gamepad2.right_trigger == 0){
-            leftWheel.setPower(0);
-            rightWheel.setPower(0);
-        }
+            if (gamepad2.right_trigger == 1) {
+                leftWheel.setPower(1);
+                rightWheel.setPower(1);
+            }
+            else if (gamepad2.right_trigger == 0){
+                leftWheel.setPower(0);
+                rightWheel.setPower(0);
+            }
 
         }
 
         public void setArm() {
-        if (gamepad2.right_stick_y <= -0.99 && (Math.abs(gamepad2.right_stick_x) < 0.3)){
-            armMotorVelocity += 1250;
-        }
-        else if (gamepad1.right_stick_y >= 0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)){
-            armMotorVelocity -= 1250;
+            if (gamepad2.right_stick_y <= -0.99 && (Math.abs(gamepad2.right_stick_x) < 0.3)){
+                armMotorVelocity += 1250;
             }
+            else if (gamepad1.right_stick_y >= 0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)){
+                armMotorVelocity -= 1250;
+                }
         }
 
     public void setSpeed() {
