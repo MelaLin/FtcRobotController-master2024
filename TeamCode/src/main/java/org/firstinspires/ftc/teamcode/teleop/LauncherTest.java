@@ -26,15 +26,9 @@ public class LauncherTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            if(gamepad2.right_bumper) {
-                leftWheel.setPower(0.0);
-                rightWheel.setPower(0.0);
-            }
-            else{
 
-            }
-
-
+           // rightWheel.setPower(1);
+           leftWheel.setPower(1);
 
         }
     }

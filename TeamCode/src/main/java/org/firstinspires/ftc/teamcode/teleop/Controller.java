@@ -40,8 +40,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
             backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
             frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
             armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
-            CRServo leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
-            CRServo rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+            leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
+            rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
             CRServo rotation = hardwareMap.get(CRServo.class, "rotation");
 
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -59,12 +59,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
                 telemetry.addData("gamepad1.right_stick_x: ", gamepad1.right_stick_x);
                 telemetry.addData("gamepad1.left_stick_y: ", gamepad1.left_stick_y);
                 telemetry.addData("gamepad1.left_stick_x: ", gamepad1.left_stick_x);
+                telemetry.addData("gamepad2.right_trigger: ", gamepad2.right_trigger);
                 telemetry.addData("speedLeft: ", speedLeft);
                 telemetry.addData("speedRight: ", speedRight);
                 telemetry.addData("Motor Left Front Speed: ", frontLeft.getVelocity());
                 telemetry.addData("Motor Right Front Speed: ", frontRight.getVelocity());
                 telemetry.addData("Motor Left Back Speed: ", backLeft.getVelocity());
                 telemetry.addData("Motor Right Back Speed: ", backRight.getVelocity());
+
                 telemetry.update();
 
                 frontLeft.setMotorEnable();
@@ -98,13 +100,16 @@ import com.qualcomm.robotcore.hardware.CRServo;
         }
 
         public void setLaunch(){
-        if (gamepad2.a) {
+
+        if (gamepad2.right_trigger == 1) {
+            leftWheel.setPower(1);
+            rightWheel.setPower(1);
+        }
+        else if (gamepad2.right_trigger == 0){
             leftWheel.setPower(0);
             rightWheel.setPower(0);
         }
-            else {
 
-            }
         }
 
         public void setArm() {
