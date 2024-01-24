@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
     private DcMotorEx armMotor;
+    private DcMotorEx handMotor;
 
     private CRServo leftWheel;
     private CRServo rightWheel;
@@ -28,6 +29,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
     private Double backLeftVelocity = 0.0;
     private Double backRightVelocity = 0.0;
     private Double armMotorVelocity = 0.0;
+    private Double handMotorVelocity = 0.0;
+
+    int armMotorPosition;
+    int handMotorPosition;
     /*
     public Controller(DcMotorEx frontLeft) {
         this.frontLeft = frontLeft;
@@ -40,12 +45,17 @@ import com.qualcomm.robotcore.hardware.CRServo;
             backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
             frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
             armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
+            handMotor = hardwareMap.get(DcMotorEx.class, "Motor 5");
             leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
             rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+
             CRServo rotation = hardwareMap.get(CRServo.class, "rotation");
+
 
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            armMotor.setTargetPosition(0);
+            handMotor.setTargetPosition(0);
 
             telemetry.addData("Status", "Initialized");
             telemetry.update();
@@ -53,6 +63,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
             waitForStart();
 
             while (opModeIsActive()) {
+
+                armMotorPosition = armMotor.getCurrentPosition();
+                handMotorPosition = handMotor.getCurrentPosition();
 
                 telemetry.addData("Status", "Running");
                 telemetry.addData("gamepad1.right_stick_y: ", gamepad1.right_stick_y);
@@ -66,6 +79,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
                 telemetry.addData("Motor Right Front Speed: ", frontRight.getVelocity());
                 telemetry.addData("Motor Left Back Speed: ", backLeft.getVelocity());
                 telemetry.addData("Motor Right Back Speed: ", backRight.getVelocity());
+                telemetry.addData("armMotor Position", armMotorPosition);
+                telemetry.addData("handMotor Position", handMotorPosition);
+                telemetry.addData("armMotor real position", armMotor.getCurrentPosition());
+                telemetry.addData("handMotor real position", handMotor.getCurrentPosition());
+
 
                 telemetry.update();
 
@@ -74,6 +92,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
                 backLeft.setMotorEnable();
                 backRight.setMotorEnable();
                 armMotor.setMotorEnable();
+                handMotor.setMotorEnable();
 
                 speedLeft = 0.0;
                 speedRight = 0.0;
@@ -82,44 +101,80 @@ import com.qualcomm.robotcore.hardware.CRServo;
                 backLeftVelocity = 0.0;
                 backRightVelocity = 0.0;
                 armMotorVelocity = 0.0;
+                handMotorVelocity = 0.0;
 
 
                 setSpeed();
                 setRotation();
                 setDirection();
-                setArm();
+                //setArm();
                 setLaunch();
+                setLimit();
+
 
 
                 frontLeft.setVelocity(frontLeftVelocity);
                 frontRight.setVelocity(frontRightVelocity);
                 backLeft.setVelocity(backLeftVelocity);
                 backRight.setVelocity(backRightVelocity);
+                armMotor.setVelocity(armMotorVelocity);
+                handMotor.setVelocity(handMotorVelocity);
 
+
+            }
+        }
+
+        public void setLimit(){
+            armMotorPosition += -gamepad2.right_stick_y * -1.75;
+            handMotorPosition += -gamepad2.left_stick_y * -1.75;
+            armMotor.setTargetPosition(armMotorPosition);
+            handMotor.setTargetPosition(handMotorPosition);
+            armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            handMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            armMotor.setPower(10);
+            handMotor.setPower(10);
+            if(armMotorPosition < -500){
+                armMotorPosition = -500;
+            }
+            if(handMotorPosition < -500){
+                handMotorPosition = -500;
+            }
+            if(armMotorPosition > -3){
+                armMotorPosition = -3;
+            }
+            if(handMotorPosition > -3){
+                handMotorPosition = -3;
             }
         }
 
         public void setLaunch(){
 
-            if (gamepad2.right_trigger == 1) {
+            if (gamepad2.right_trigger > 0.7) {
                 leftWheel.setPower(1);
                 rightWheel.setPower(1);
             }
-            else if (gamepad2.right_trigger == 0){
+            else {
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
             }
 
         }
 
-        public void setArm() {
-            if (gamepad2.right_stick_y <= -0.99 && (Math.abs(gamepad2.right_stick_x) < 0.3)){
-                armMotorVelocity += 1250;
+   /*     public void setArm() {
+            if ((gamepad2.right_stick_y <= -0.7)){
+                armMotorVelocity -= 650;
             }
-            else if (gamepad1.right_stick_y >= 0.99 && (Math.abs(gamepad1.right_stick_x) < 0.3)){
-                armMotorVelocity -= 1250;
+            else if ((gamepad2.right_stick_y >= 0.7)) {
+                armMotorVelocity += 650;
                 }
-        }
+
+            if (gamepad2.left_stick_y <= -0.7){
+                handMotorVelocity -= 400;
+            }
+            else if (gamepad2.left_stick_y >= 0.7){
+                handMotorVelocity += 400;
+            }
+        }*/
 
     public void setSpeed() {
         Double offsetLeft = 1.08;
