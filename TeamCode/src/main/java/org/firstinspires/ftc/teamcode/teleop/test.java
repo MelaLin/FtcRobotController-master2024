@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-//import org.firstinspires.ftc.robotcontroller.*;
-//import org.firstinspires.ftc.teamcode.*;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,7 +19,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
     @Override
         public void runOpMode() {
-        DcMotor motor = hardwareMap.dcMotor.get("Motor3");
+        DcMotor motor = hardwareMap.dcMotor.get("Motor5");
 
             waitForStart();
 //HELLO MELA!!!!
