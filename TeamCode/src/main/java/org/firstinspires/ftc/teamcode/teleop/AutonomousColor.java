@@ -99,6 +99,26 @@ import java.util.Locale;
                 double hueValue = hsvValues[0];
                 double distance = sensorDistance.getDistance(DistanceUnit.CM);
 
+                backLeft.setPower(0.5 * 0.96);
+                backRight.setPower(0.5 * 1.07);
+                frontLeft.setPower(0.5 * 0.96);
+                frontRight.setPower(0.5 * 1.07);
+                sleep(1500);
+
+                backLeft.setPower(0.5 * 0.96);
+                backRight.setPower(-0.5 * 1.07);
+                frontLeft.setPower(0.5 * 0.96);
+                frontRight.setPower(-0.5 * 1.07);
+                sleep(760);
+
+                backLeft.setPower(0.5 * 0.96);
+                backRight.setPower(0.5 * 1.07);
+                frontLeft.setPower(0.5 * 0.96);
+                frontRight.setPower(0.5 * 1.07);
+                sleep(5000);
+
+
+                /*
                 //move forward
                 backLeft.setPower(0.5 * 0.96);
                 backRight.setPower(0.5 * 1.07);
@@ -261,6 +281,8 @@ import java.util.Locale;
                 }
             });
 */
+
+
             }
         }
 

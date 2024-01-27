@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
-
+//we are importing all of the needed code that FTC has given us for the hardware devices
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-
+//labeling this code to show up in the TeleOp column of the Driver Station App
 @TeleOp(name = "Controller", group = "Default")
 
     public class Controller extends LinearOpMode {
+    //define the variables we are going to be using
     private DcMotorEx frontLeft;
     private DcMotorEx frontRight;
     private DcMotorEx backLeft;
@@ -19,9 +20,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private DcMotorEx handMotor;
 
     private CRServo leftWheel;
-    private CRServo rightWheel;
+   // private CRServo rightWheel;
     private CRServo rotation;
 
+    //define the speed/velocity variables and set them equal to 0.0
     private Double speedLeft = 0.0;
     private Double speedRight = 0.0;
     private Double frontLeftVelocity = 0.0;
@@ -30,12 +32,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private Double backRightVelocity = 0.0;
     private Double armMotorVelocity = 0.0;
     private Double handMotorVelocity = 0.0;
-
+//initiate the arm and hand motor position variables
     int armMotorPosition;
     int handMotorPosition;
 
     @Override
         public void runOpMode() {
+        //define variables and get them from the robot configuration
             backLeft = hardwareMap.get(DcMotorEx.class, "Motor0");
             frontLeft = hardwareMap.get(DcMotorEx.class, "Motor1");
             backRight = hardwareMap.get(DcMotorEx.class, "Motor2");
@@ -43,41 +46,45 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
             handMotor = hardwareMap.get(DcMotorEx.class, "Motor5");
             leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
-            rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+           // rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
             rotation = hardwareMap.get(CRServo.class, "rotation");
 
+            //reset encoders for the arm and hand motors
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             handMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+            //reverse the directions of the frontLeft and backLeft motors so we don't have to use a mix of positive and negative signs when making the robot move forward
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            //tell the motors to brake when their velocity is at 0 so they will hold the arm in place
             armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             handMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            //set the current position the arm and hand motors are at to position 0
             armMotor.setTargetPosition(0);
             handMotor.setTargetPosition(0);
 
-
+            //when all of the above has been done, this will show up on the Driver Station App
             telemetry.addData("Status", "Initialized");
             telemetry.update();
-
+            //waiting for the start button to be pressed
             waitForStart();
-
+        //the arm and hand motor positions are the current positions that they are at
         armMotorPosition = armMotor.getCurrentPosition();
         handMotorPosition = handMotor.getCurrentPosition();
 
+        //make the motor run until it reaches the target position
         armMotor.setTargetPosition(armMotorPosition);
         handMotor.setTargetPosition(handMotorPosition);
 
 
-
+//make the motor run to the target position
         armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
        handMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             while (opModeIsActive()) {
 
 
-
+                //this is all data that will show up on the Driver Station App
                 telemetry.addData("Status", "Running");
                 telemetry.addData("gamepad1.right_stick_y: ", gamepad1.right_stick_y);
                 telemetry.addData("gamepad1.right_stick_x: ", gamepad1.right_stick_x);
@@ -98,14 +105,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
                 telemetry.update();
-
+//enable the motors so they work
                 frontLeft.setMotorEnable();
                 frontRight.setMotorEnable();
                 backLeft.setMotorEnable();
                 backRight.setMotorEnable();
                 armMotor.setMotorEnable();
                 handMotor.setMotorEnable();
-
+                //set the speed variables to 0.0
                 speedLeft = 0.0;
                 speedRight = 0.0;
                 frontLeftVelocity = 0.0;
@@ -115,80 +122,84 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
                 armMotorVelocity = 0.0;
                 handMotorVelocity = 0.0;
 
-
+//run all these different things
                 setSpeed();
                 setRotation();
                 setDirection();
-               // setArm();
                 setLaunch();
                 setLimit();
+                setIntake();
 
 
 
 
-
+//the velocity of the motor is the velocity that the motor is going at
                 frontLeft.setVelocity(frontLeftVelocity);
                 frontRight.setVelocity(frontRightVelocity);
                 backLeft.setVelocity(backLeftVelocity);
                 backRight.setVelocity(backRightVelocity);
                 armMotor.setVelocity(armMotorVelocity);
                 handMotor.setVelocity(handMotorVelocity);
-                handMotor.setVelocity(50);
 
+            }
+        }
+
+        public void setIntake() {
+        //this is for the intake controls
+            //if the left trigger is pushed, the intake will spin in the positive direction.
+            if (gamepad2.left_trigger > 0.1) {
+                rotation.setPower(1);
+
+            }
+            //if the right trigger is pushed, the intake will spin in the negative direction.
+            else if (gamepad2.right_trigger > 0.1){
+                rotation.setPower(-1);
+            }
+            //if both the right trigger and the left trigger are not being pushed, the intake will not spin.
+            else if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
+                rotation.setPower(0);
             }
         }
 
         public void setLimit(){
+        //this is for the arm controls
+        //this is the sensitivity of the gamepad sticks and how much that value is multiplied to calculate the arm and hand motor position
             armMotorPosition += -gamepad2.right_stick_y * 10;
             handMotorPosition += -gamepad2.left_stick_y * 10;
+            //the arm and hand motor's target position is the value set by the gamepad stick * 10
             armMotor.setTargetPosition(armMotorPosition);
             handMotor.setTargetPosition(handMotorPosition);
-            handMotor.setTargetPosition(200);
+            //the arm motor velocity will be 500 ticks per second
             armMotorVelocity = 500.0;
-            handMotorVelocity = 500.0;
+            //the hand motor velocity will be 1000 ticks per second
+            handMotorVelocity = 1000.0;
+            //here, we are setting limits so the robot arm and hand don't go crazy
             if(armMotorPosition < -500){
                 armMotorPosition = -500;
             }
-            if(handMotorPosition < -500){
-                handMotorPosition = -500;
+            if(handMotorPosition < 0){
+                handMotorPosition = 0;
             }
             if(armMotorPosition > 0){
                 armMotorPosition = 0;
             }
-            if(handMotorPosition > 0){
-                handMotorPosition = 0;
+            if(handMotorPosition > 1000){
+                handMotorPosition = 1000;
             }
         }
 
         public void setLaunch(){
-
-            if (gamepad2.right_trigger > 0.7) {
+//this is for the airplane launcher
+            if (gamepad2.right_bumper) {
                 leftWheel.setPower(1);
-                rightWheel.setPower(1);
+            //    rightWheel.setPower(1);
             }
             else {
                 leftWheel.setPower(0);
-                rightWheel.setPower(0);
+           //     rightWheel.setPower(0);
             }
 
         }
-
-   /*  public void setArm() {
-            if ((gamepad2.right_stick_y <= -0.7)){
-                armMotorVelocity -= 650;
-            }
-            else if ((gamepad2.right_stick_y >= 0.7)) {
-                armMotorVelocity += 650;
-                }
-
-            if (gamepad2.left_stick_y <= -0.7){
-                handMotorVelocity -= 400;
-            }
-            else if (gamepad2.left_stick_y >= 0.7){
-                handMotorVelocity += 400;
-            }
-
-        }*/
 
     public void setSpeed() {
         Double offsetLeft = 1.08;
