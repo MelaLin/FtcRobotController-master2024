@@ -19,9 +19,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
     private DcMotorEx armMotor;
     private DcMotorEx handMotor;
 
-    private CRServo leftWheel;
-   // private CRServo rightWheel;
+    private CRServo launch;
+    private CRServo rightWheel;
     private CRServo rotation;
+    private CRServo propeller;
 
     //define the speed/velocity variables and set them equal to 0.0
     private Double speedLeft = 0.0;
@@ -45,8 +46,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             frontRight = hardwareMap.get(DcMotorEx.class, "Motor3");
             armMotor = hardwareMap.get(DcMotorEx.class, "Motor4");
             handMotor = hardwareMap.get(DcMotorEx.class, "Motor5");
-            leftWheel = hardwareMap.get(CRServo.class, "leftWheel");
-           // rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+            launch = hardwareMap.get(CRServo.class, "leftWheel");
+            rightWheel = hardwareMap.get(CRServo.class, "rightWheel");
+            propeller = hardwareMap.crservo.get("propeller");
             rotation = hardwareMap.get(CRServo.class, "rotation");
 
             //reset encoders for the arm and hand motors
@@ -174,11 +176,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
             //the hand motor velocity will be 1000 ticks per second
             handMotorVelocity = 1000.0;
             //here, we are setting limits so the robot arm and hand don't go crazy
-            if(armMotorPosition < -500){
-                armMotorPosition = -500;
+            if(armMotorPosition < -10000){
+                armMotorPosition = -10000;
             }
-            if(handMotorPosition < 0){
-                handMotorPosition = 0;
+            if(handMotorPosition < -1000){
+                handMotorPosition = -1000;
             }
             if(armMotorPosition > 0){
                 armMotorPosition = 0;
@@ -191,12 +193,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
         public void setLaunch(){
 //this is for the airplane launcher
             if (gamepad2.right_bumper) {
-                leftWheel.setPower(1);
-            //    rightWheel.setPower(1);
+                launch.setPower(1);
+                rightWheel.setPower(1);
             }
             else {
-                leftWheel.setPower(0);
-           //     rightWheel.setPower(0);
+
+            }
+            if (gamepad2.a){
+                propeller.setPower(0);
+            }
+            else {
+                propeller.setPower(0.7);
             }
 
         }
