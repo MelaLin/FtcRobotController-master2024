@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCapt
 
 import java.util.Locale;
 @TeleOp(name = "AutonomousColor2", group = "Default")
-// Comment this out to add to the opmode list
+// Comment this out to add to the OpMode list
 public class AutonomousColor2 extends LinearOpMode {
 
     private DcMotorEx backLeft;
@@ -77,7 +77,7 @@ public class AutonomousColor2 extends LinearOpMode {
         final float values[] = hsvValues;
 
         // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
+        // to amplify the measured values.
         final double SCALE_FACTOR = 255;
 
         // get a reference to the RelativeLayout so we can change the background
